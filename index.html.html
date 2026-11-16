@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Donde comienza nuestra historia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold-primary: #d4af37;
+            --gold-light: #f5e6b3;
+            --gold-dark: #997a15;
+            --crimson-ribbon: #9e1b24;
+            --crimson-bright: #c92a35;
+            --crimson-dark: #5e0d13;
+            --ivory: #faf6ee;
+            --night-sky: #0b0914;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--night-sky);
+            color: var(--ivory);
+            min-height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            position: relative;
+        }
+
+        /* ================= FONDOS ATMOSFÉRICOS ================= */
+        .sky-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            transition: opacity 1.4s ease, transform 8s ease-out;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1.04);
+        }
+
+        .sky-backdrop.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #bg-1 {
+            background-image: radial-gradient(circle at 50% 68%, rgba(235, 138, 68, 0.45) 0%, rgba(168, 56, 75, 0.35) 35%, rgba(28, 20, 48, 0.92) 75%, #0b0914 100%);
+        }
+        #bg-2 {
+            background-image: radial-gradient(circle at 50% 60%, rgba(212, 175, 55, 0.32) 0%, rgba(110, 40, 55, 0.4) 45%, #0e0a1a 90%);
+        }
+        #bg-3 {
+            background-image: radial-gradient(circle at 50% 75%, rgba(62, 74, 137, 0.45) 0%, rgba(24, 22, 52, 0.85) 55%, #07060e 100%);
+        }
+        #bg-4 {
+            background-image: radial-gradient(circle at 50% 65%, rgba(245, 195, 85, 0.45) 0%, rgba(158, 27, 36, 0.38) 45%, #120914 95%);
+        }
+
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Cordillera de montañas + Gatito de fondo */
+        .mountains-layer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 34dvh;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ================= CONTENEDOR PRINCIPAL MÓVIL ================= */
+        .stage-wrapper {
+            position: relative;
+            z-index: 5;
+            width: 92%;
+            max-width: 410px;
+            min-height: 80dvh;
+            max-height: 92dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .luxury-card {
+            position: relative;
+            width: 100%;
+            background: linear-gradient(165deg, rgba(24, 18, 34, 0.90) 0%, rgba(13, 10, 20, 0.96) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 22px;
+            padding: 36px 20px 24px 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), inset 0 0 24px rgba(212, 175, 55, 0.08);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .luxury-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            border-radius: 15px;
+            pointer-events: none;
+        }
+
+        /* ================= LAZO DIAGONAL DE 45° MÁS ANCHO Y CON MOÑO ================= */
+        .corner-ribbon-wrapper {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 130px;
+            height: 130px;
+            overflow: hidden;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .corner-ribbon {
+            position: absolute;
+            top: 24px;
+            right: -38px;
+            width: 170px;
+            height: 32px;
+            background: linear-gradient(90deg, var(--crimson-dark), var(--crimson-ribbon) 40%, var(--crimson-bright) 50%, var(--crimson-ribbon) 60%, var(--crimson-dark));
+            transform: rotate(45deg);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1.5px solid var(--gold-light);
+            border-bottom: 1.5px solid var(--gold-light);
+            pointer-events: auto;
+        }
+
+        .corner-ribbon span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.62rem;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Moño decorativo en la esquina superior derecha */
+        .ribbon-bow {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1.3rem;
+            z-index: 11;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            pointer-events: none;
+        }
+
+        /* ================= GIRASOLES GRANDES, DETALLADOS Y VISIBLES ================= */
+        .sunflower-corner {
+            position: absolute;
+            width: 105px;
+            height: 105px;
+            z-index: 8;
+            opacity: 0;
+            transform: scale(0.5) rotate(-25deg);
+            transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.7));
+        }
+
+        .sunflower-corner.top-left {
+            top: -20px;
+            left: -20px;
+        }
+
+        .sunflower-corner.bottom-right {
+            bottom: -20px;
+            right: -20px;
+            transform: scale(0.5) rotate(155deg);
+        }
+
+        .sunflower-corner.visible {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        .sunflower-corner.bottom-right.visible {
+            transform: scale(1) rotate(180deg);
+        }
+
+        /* ================= SILUETA DE GATITO VISIBLE EN LA TARJETA ================= */
+        .card-cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            margin-bottom: 12px;
+        }
+
+        .card-cat-badge span {
+            font-size: 0.9rem;
+        }
+
+        /* ================= PANTALLAS Y TIPOGRAFÍA ================= */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            animation: cardReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .eyebrow-text {
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-primary);
+            margin-bottom: 6px;
+        }
+
+        h1, h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: var(--gold-light);
+            line-height: 1.3;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 { font-size: 1.38rem; }
+        h2 { font-size: 1.22rem; }
+
+        .story-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.16rem;
+            line-height: 1.5;
+            color: var(--ivory);
+            margin-bottom: 18px;
+            font-weight: 400;
+        }
+
+        .divider-gold {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65%;
+            margin: 2px auto 14px auto;
+            gap: 10px;
+        }
+
+        .divider-gold span {
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .divider-diamond {
+            width: 6px;
+            height: 6px;
+            background: var(--crimson-bright);
+            border: 1px solid var(--gold-light);
+            transform: rotate(45deg);
+        }
+
+        /* ================= BOTONES DE LUJO ================= */
+        .btn-gold {
+            background: linear-gradient(135deg, #f3dc99 0%, #d4af37 50%, #aa8218 100%);
+            color: #140d05;
+            border: 1px solid #fff3c4;
+            padding: 12px 24px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.28), inset 0 1px 1px rgba(255,255,255,0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 4px;
+        }
+
+        .btn-gold:active {
+            transform: scale(0.96);
+        }
+
+        .options-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-top: 2px;
+        }
+
+        .btn-choice {
+            position: relative;
+            width: 100%;
+            background: linear-gradient(90deg, rgba(158, 27, 36, 0.22) 0%, rgba(28, 21, 42, 0.85) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.42);
+            border-left: 3px solid var(--crimson-bright);
+            color: var(--ivory);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .btn-choice:active {
+            background: linear-gradient(90deg, rgba(158, 27, 36, 0.48) 0%, rgba(212, 175, 55, 0.22) 100%);
+            transform: scale(0.98);
+        }
+
+        .btn-choice .choice-icon {
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        /* ================= PANTALLA FINAL Y RECUERDO FOTOGRÁFICO ================= */
+        .date-seal {
+            margin-top: 2px;
+            margin-bottom: 10px;
+            padding: 5px 12px;
+            border-top: 1px solid rgba(212, 175, 55, 0.35);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            letter-spacing: 1.2px;
+            color: var(--gold-light);
+        }
+
+        .photo-frame-container {
+            position: relative;
+            width: 105px;
+            height: 105px;
+            margin: 0 auto 10px auto;
+            border-radius: 12px;
+            border: 2px dashed rgba(212, 175, 55, 0.5);
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .photo-frame-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .photo-placeholder-text {
+            font-size: 0.65rem;
+            color: var(--gold-light);
+            text-align: center;
+            padding: 0 8px;
+            font-family: 'Cinzel', serif;
+            line-height: 1.3;
+        }
+
+        .photo-input-file {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .action-buttons-grid {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            margin-top: 4px;
+            justify-content: center;
+        }
+
+        .btn-subtle {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--gold-light);
+            padding: 8px 10px;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.62rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Estilos especiales para impresión / guardado en PDF */
+        @media print {
+            body { background: #fff; color: #000; }
+            .sky-backdrop, #particles-canvas, .mountains-layer, .btn-gold, .action-buttons-grid, .corner-ribbon-wrapper, .ribbon-bow { display: none !important; }
+            .luxury-card { border: 1px solid #d4af37; box-shadow: none; background: #fff; color: #111; }
+            .story-text, h1, h2, .eyebrow-text { color: #111 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondos atmosféricos -->
+    <div class="sky-backdrop active" id="bg-1"></div>
+    <div class="sky-backdrop" id="bg-2"></div>
+    <div class="sky-backdrop" id="bg-3"></div>
+    <div class="sky-backdrop" id="bg-4"></div>
+
+    <!-- Partículas luminosas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Cordillera de montañas + Gatito -->
+    <svg class="mountains-layer" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <defs>
+            <linearGradient id="mtnBack" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#231938" stop-opacity="0.75"/>
+                <stop offset="100%" stop-color="#0d0917" stop-opacity="0.95"/>
+            </linearGradient>
+            <linearGradient id="mtnMid" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#171026" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#090710" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="mtnFront" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0d0916"/>
+                <stop offset="100%" stop-color="#050408"/>
+            </linearGradient>
+        </defs>
+        <path fill="url(#mtnBack)" d="M0,190 L180,95 L380,175 L610,65 L860,165 L1120,75 L1320,150 L1440,110 L1440,320 L0,320 Z"/>
+        <path fill="url(#mtnMid)" d="M0,230 L240,145 L490,220 L740,120 L1020,210 L1260,135 L1440,195 L1440,320 L0,320 Z"/>
+        <path fill="url(#mtnFront)" d="M0,265 Q360,215 720,255 T1440,240 L1440,320 L0,320 Z"/>
+        
+        <!-- Silueta del gatito en el paisaje -->
+        <g transform="translate(1120, 215) scale(1.05)" fill="#050408">
+            <path d="M12,34 C8,34 6,28 8,21 C9,16 12,13 13,11 C12,8 12,4 13,2 L16,6 C18,5 20,5 22,6 L25,2 C26,4 26,8 25,11 C27,14 29,18 28,24 C27,30 24,34 20,34 Z"/>
+            <path d="M25,31 C33,31 38,24 35,17 C34,14 31,15 32,18 C34,22 30,27 24,28 Z"/>
+        </g>
+    </svg>
+
+    <!-- Contenedor Principal -->
+    <main class="stage-wrapper">
+        <div class="luxury-card" id="main-card">
+            
+            <!-- Lazo diagonal de 45° más ancho y con moño -->
+            <div class="corner-ribbon-wrapper" id="corner-ribbon-container">
+                <div class="corner-ribbon">
+                    <span>TQM</span>
+                </div>
+            </div>
+            <div class="ribbon-bow" id="ribbon-bow-element">🎀</div>
+
+            <!-- Girasoles grandes y detallados en esquinas (Visibles en Etapas 2 y 4) -->
+            <div class="sunflower-corner top-left" id="sf-top">
+                <svg viewBox="0 0 100 100" width="100%" height="100%">
+                    <g transform="translate(50,50)">
+                        <g fill="#e6a817">
+                            <ellipse rx="8" ry="30" transform="rotate(0) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(30) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(60) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(90) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(120) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(150) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(180) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(210) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(240) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(270) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(300) translate(0,-18)"/>
+                            <ellipse rx="8" ry="30" transform="rotate(330) translate(0,-18)"/>
+                        </g>
+                        <g fill="#f7c839">
+                            <ellipse rx="6.5" ry="24" transform="rotate(15) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(45) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(75) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(105) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(135) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(165) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(195) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(225) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(255) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(285) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(315) translate(0,-15)"/>
+                            <ellipse rx="6.5" ry="24" transform="rotate(345) translate(0,-15)"/>
+                        </g>
+                        <circle r="17" fill="#3b210c" stroke="#d4af37" stroke-width="1.5"/>
+                        <circle r="11" fill="#241205" stroke="#6e4119" stroke-width="1" stroke-dasharray="2,2"/>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="sunflower-corner bottom-right" id="sf-bottom">
+                <svg viewBox="0 0 100 100" width="100%" height="100%">
+                    <use href="#sf-top" />
+                </svg>
+            </div>
+
+            <!-- ================= ETAPA 1: BIENVENIDA ================= -->
+            <section class="screen active" id="screen-1">
+                <div class="card-cat-badge"><span>🐱</span> Especial para ti</div>
+                <span class="eyebrow-text">Nuestra historia</span>
+                <h1>Donde comienza nuestra historia</h1>
+                <div class="divider-gold"><span></span><div class="divider-diamond"></div><span></span></div>
+                <p class="story-text">
+                    Hay silencios que dicen todo, y caminos que sabían exactamente a dónde debían llevarnos. Porque me encanta estar contigo, tengo una sorpresa especial, gatita.
+                </p>
+                <button class="btn-gold" onclick="goToScreen(2)">Descubrir mi sorpresa</button>
+            </section>
+
+            <!-- ================= ETAPA 2: CARTA ROMÁNTICA (Con Girasoles) ================= -->
+            <section class="screen" id="screen-2">
+                <span class="eyebrow-text">Un instante nuestro</span>
+                <div class="divider-gold"><span></span><div class="divider-diamond"></div><span></span></div>
+                <p class="story-text">
+                    Cada día nos conocemos un poquito más, en las risas, en los días tranquilos, hasta en los momentos difíciles. Pero hay detalles que merecen un espacio propio, un instante grabado solo para nosotros dos...
+                </p>
+                <button class="btn-gold" onclick="goToScreen(3)">Hay algo que quiero preguntarte</button>
+            </section>
+
+            <!-- ================= ETAPA 3: LA PREGUNTA (LIMPIA: Sin girasoles) ================= -->
+            <section class="screen" id="screen-3">
+                <span class="eyebrow-text">Bajo este cielo</span>
+                <p class="story-text" style="margin-bottom: 8px;">
+                    Porque lo nuestro es una historia de ternura, complicidad y cariño genuino...
+                </p>
+                <h2 style="color: #fff; font-size: 1.25rem; margin-bottom: 12px;">¿Quieres construir una historia oficial conmigo...?</h2>
+                
+                <div class="options-group">
+                    <button class="btn-choice" onclick="selectAnswer(1)">
+                        <span>Sí, yo también te quiero mucho. ❤️</span>
+                        <span class="choice-icon">✦</span>
+                    </button>
+                    <button class="btn-choice" onclick="selectAnswer(2)">
+                        <span>¡Por fin! Te tardaste... eh. ✨</span>
+                        <span class="choice-icon">✦</span>
+                    </button>
+                    <button class="btn-choice" onclick="selectAnswer(3)">
+                        <span>Sí... quiero estar siempre contigo. 🌙</span>
+                        <span class="choice-icon">✦</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- ================= ETAPA 4: CELEBRACIÓN Y RECUERDO ================= -->
+            <section class="screen" id="screen-4">
+                <span class="eyebrow-text">Nuestra historia</span>
+                <h2 id="celebration-title" style="font-size: 1.1rem; margin-bottom: 4px;">¡Hoy es nuestro primer día juntos como enamorados! ❤️</h2>
+                
+                <div class="date-seal" id="official-date"></div>
+
+                <!-- Selector de foto / Cámara -->
+                <div class="photo-frame-container" id="photo-container">
+                    <span class="photo-placeholder-text">Agregar foto juntos 📷</span>
+                    <img id="user-photo-preview" alt="Nuestro recuerdo">
+                    <input type="file" accept="image/*" capture="environment" class="photo-input-file" id="photo-input" onchange="handlePhotoSelection(event)">
+                </div>
+
+                <div class="action-buttons-grid">
+                    <button class="btn-subtle" onclick="triggerSaveRecord()">Guardar recuerdo</button>
+                    <button class="btn-subtle" onclick="window.print()">Imprimir / PDF</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        /* ================= NAVEGACIÓN Y CONTROL VISUAL ================= */
+        function goToScreen(step) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${step}`).classList.add('active');
+
+            document.querySelectorAll('.sky-backdrop').forEach(bg => bg.classList.remove('active'));
+            document.getElementById(`bg-${step}`).classList.add('active');
+
+            // Girasoles solo en etapas 2 y 4
+            const sfTop = document.getElementById('sf-top');
+            const sfBottom = document.getElementById('sf-bottom');
+            if (step === 2 || step === 4) {
+                sfTop.classList.add('visible');
+                sfBottom.classList.add('visible');
+            } else {
+                sfTop.classList.remove('visible');
+                sfBottom.classList.remove('visible');
+            }
+
+            // En etapa 3, suavizar la cinta diagonal para dar protagonismo absoluto al cielo y pregunta
+            const cornerRibbon = document.getElementById('corner-ribbon-container');
+            const ribbonBow = document.getElementById('ribbon-bow-element');
+            if (step === 3) {
+                cornerRibbon.style.opacity = '0.25';
+                ribbonBow.style.opacity = '0.25';
+            } else {
+                cornerRibbon.style.opacity = '1';
+                ribbonBow.style.opacity = '1';
+            }
+        }
+
+        /* ================= SELECCIÓN DE RESPUESTAS ================= */
+        function selectAnswer(choice) {
+            const responses = {
+                1: { title: "«¡Hoy es nuestro primer día juntos como enamorados! ❤️»" },
+                2: { title: "«¡Nuestro primer paso juntos! ✨»" },
+                3: { title: "«Para siempre contigo 🌙»" }
+            };
+
+            document.getElementById('celebration-title').innerText = responses[choice].title;
+
+            const now = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('official-date').innerText = `Oficial desde el ${now.toLocaleDateString('es-ES', options)}`;
+
+            goToScreen(4);
+        }
+
+        /* ================= FOTO / CÁMARA ================= */
+        function handlePhotoSelection(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('user-photo-preview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.querySelector('.photo-placeholder-text').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function triggerSaveRecord() {
+            // Lógica para guardar recuerdo o invocar impresión optimizada en móvil
+            window.print();
+        }
+
+        /* ================= PARTÍCULAS DORADAS Y ESTRELLAS ================= */
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class AmbientParticle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2.2 + 0.5;
+                this.speedY = (Math.random() * 0.3 + 0.1) * -1;
+                this.opacity = Math.random() * 0.7 + 0.2;
+                this.color = Math.random() > 0.3 ? '#f5e6b3' : '#e63946';
+            }
+            update() {
+                this.y += this.speedY;
+                if (this.y < 0) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        for (let i = 0; i < 35; i++) {
+            particles.push(new AmbientParticle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
